@@ -1,0 +1,2 @@
+2022-06-08T06:36:50KST [COMMAND]$ ./do-terraform.sh -g stage/g.tfvars stage/frontend/ dev plan
+2022-06-08T06:36:50KST [EXECUTED]$ terraform plan -var-file=./bucket.tfvars -var-file=/root/infra/stage/g.tfvars

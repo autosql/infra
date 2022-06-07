@@ -14,6 +14,18 @@ F_T_VALIDATE=0
 
 ### VARIABLES
 GLOBAL_TFVARS=""
+ORIGINAL_DIR=`realpath ./`
+LOG_FILE="$ORIGINAL_DIR/do-terraform.log"
+INFRA_LOG_FILE="$ORIGINAL_DIR/do-terraform-infra.log"
+ORIGINAL_COMMAND="$0 $@"
+
+# Create Log Files, if not exists
+if [[ ! -f "$LOG_FILE" ]]; then
+  touch "$LOG_FILE"
+fi
+if [[ ! -f "$INFRA_LOG_FILE" ]]; then
+  touch "$INFRA_LOG_FILE"
+fi
 
 # Option settings
 while getopts ":g:" opt;
@@ -64,6 +76,7 @@ T_COMMANDS=('plan' 'apply' 'destroy')
 
 if [[ " ${T_COMMANDS[*]} " =~ " $3 " ]]; then
   COMMAND="terraform $3"
+  T_COMMAND="$3"
 else
   echo -e "${ERROR}Command $3 is not available${EOC}"
   echo -e "${INFO}Available Commands are: ${T_COMMANDS[@]} ${EOC}"
@@ -109,10 +122,29 @@ echo ""
 echo -e "${INFO}The command will be execute: ${RESULT}$COMMAND ${EOC}"
 
 # Wait User answer
-read -p "Continue (y or n):" yn
+read -p "Continue (y or n): " yn
+
 case $yn in
   [yY] )
     eval $COMMAND
+
+    # Logging A script command and executed terraform command
+    if [[ $? -eq 0 ]]; then
+      UTC=`TZ='Asia/Seoul' date +%Y-%m-%dT%H:%M:%S%Z`
+      COMMAND_LOG="$UTC [COMMAND]\$ $ORIGINAL_COMMAND"
+      EXECUTED_LOG="$UTC [EXECUTED]\$ $COMMAND"
+
+      echo $COMMAND_LOG >> $LOG_FILE
+      echo $EXECUTED_LOG >> $LOG_FILE
+
+      if [[ "$T_COMMAND" == "apply" || "$T_COMMAND" == "destroy" ]]; then
+        INFRA_LOG="$UTC [`echo $T_COMMAND | tr [:lower:] [:upper:]`]\$ $COMMAND"
+
+        echo $COMMAND_LOG >> $INFRA_LOG_FILE
+        echo $INFRA_LOG >> $INFRA_LOG_FILE
+      fi
+
+    fi
     ;;
   [nN] )
     if [[ -n $EXISTING_WORKSPACE ]]; then
