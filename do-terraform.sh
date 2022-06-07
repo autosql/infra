@@ -2,10 +2,9 @@
 
 # Program settings
 ### COLOR
-ERROR='\033[0;91m' # Red
-ERROR_B='\033[0;101m' # Background Red
-MSG='\033[0;32m' # Green
-INFO='\033[0;36m' # Cyan
+ERROR='\033[1;91m' # Red
+RESULT='\033[0;101m' # Background Red
+INFO='\033[4;36m' # Cyan
 EOC='\033[0m' # End of Color
 
 ### FLAG
@@ -15,7 +14,6 @@ F_T_VALIDATE=0
 
 ### VARIABLES
 GLOBAL_TFVARS=""
-
 
 # Option settings
 while getopts ":g:" opt;
@@ -37,7 +35,7 @@ shift $((OPTIND-1))
 # Check Input Arguments
 if [[ -z $1 || -z $2 || -z $3 ]]; then
   echo -e "${ERROR}Use: $0 <PATH DIR> <TERRAFORM WORKSPACE> <TERRAFORM COMMAND>${EOC}"
-  echo -e "${MSG}Example: $0 live/stage/vpc dev plan${EOC}"
+  echo -e "${INFO}Example: $0 live/stage/vpc dev plan${EOC}"
   exit -1
 fi
 
@@ -57,7 +55,7 @@ if [[ " ${T_WORKSPACES[*]} " =~ " $2 " ]]; then
   WORKSPACE=$2
 else
   echo -e "${ERROR}Workspace $2 is not available${EOC}"
-  echo -e "${MSG}Available Workspaces are: ${T_WORKSPACES[@]}${EOC}"
+  echo -e "${INFO}Available Workspaces are: ${T_WORKSPACES[@]} ${EOC}"
   exit -1
 fi
 
@@ -68,7 +66,7 @@ if [[ " ${T_COMMANDS[*]} " =~ " $3 " ]]; then
   COMMAND="terraform $3"
 else
   echo -e "${ERROR}Command $3 is not available${EOC}"
-  echo -e "${MSG}Available Commands are: ${T_COMMANDS[@]}${EOC}"
+  echo -e "${INFO}Available Commands are: ${T_COMMANDS[@]} ${EOC}"
   exit -1
 fi
 
@@ -80,22 +78,26 @@ if [[ ${#T_FILES[@]} -le 0 ]]; then
 fi
 
 # Show pwd message
-echo -e "${MSG}Current Directory: ${INFO}`pwd`${EOC}"
+echo -e "${INFO}Current Directory: ${RESULT}`pwd`${EOC}"
 
 # Change Terraform Workspace
 # If there is no workspace Then Create it
-terraform workspace select $2
+terraform workspace select $WORKSPACE
 if [[ $? -ne 0 ]]; then
-  echo -e "There is no workspace $2"
-  terraform workspace new $2
+  echo -e "${INFO}There is no workspace $WORKSPACE, So Create workspace $WORKSPACE ${EOC}"
+  EXISTING_WORKSPACE=`terraform workspace show`
+  terraform workspace new $WORKSPACE
+  terraform workspace select $WORKSPACE
 fi
-echo -e "${MSG}Current Workspace: ${ERROR_B}`terraform workspace show`${EOC}"
+echo -e "${INFO}Current Workspace: ${RESULT}`terraform workspace show`${EOC}"
 
 # Make Command with var files
 T_VARS=`find . -type f -name "*.tfvars"`
 if [[ ${#T_VARS[@]} -gt 0 ]]; then
   for vars in "${T_VARS[@]}"; do
-    COMMAND="$COMMAND -var-file=$vars"
+    if [[ -n $vars ]]; then
+      COMMAND="$COMMAND -var-file=$vars"
+    fi
   done
 fi
 
@@ -104,5 +106,24 @@ if [[ $F_GLOBAL_TFVARS -eq 1 ]]; then
 fi
 
 echo ""
-echo -e "${MSG}Command will execute: ${INFO}$COMMAND${EOC}"
+echo -e "${INFO}The command will be execute: ${RESULT}$COMMAND ${EOC}"
+
+# Wait User answer
+read -p "Continue (y or n):" yn
+case $yn in
+  [yY] )
+    eval $COMMAND
+    ;;
+  [nN] )
+    if [[ -n $EXISTING_WORKSPACE ]]; then
+      echo -e "${INFO}Delete created workspace: $WORKSPACE ${EOC}"
+      terraform workspace select $EXISTING_WORKSPACE
+      terraform workspace delete $WORKSPACE
+    fi
+    exit 0
+    ;;
+  * )
+    echo -e "${INFO}Invalid Keyword${EOC}"
+    ;;
+esac
 
