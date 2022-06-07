@@ -8,6 +8,31 @@ MSG='\033[0;32m' # Green
 INFO='\033[0;36m' # Cyan
 EOC='\033[0m' # End of Color
 
+### FLAG
+F_GLOBAL_TFVARS=0
+F_T_LINTING=0
+F_T_VALIDATE=0
+
+### VARIABLES
+GLOBAL_TFVARS=""
+
+
+# Option settings
+while getopts ":g:" opt;
+do
+  case $opt in
+    g)
+      F_GLOBAL_TFVARS=1
+      ls $OPTARG 1> /dev/null
+      if [[ $? -ne 0 ]]; then exit -1; fi
+      GLOBAL_TFVARS=`realpath $OPTARG`
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+  esac
+done
+
+shift $((OPTIND-1))
 
 # Check Input Arguments
 if [[ -z $1 || -z $2 || -z $3 ]]; then
@@ -26,7 +51,7 @@ DIR=$1
 
 
 # Check Workspace restriction
-T_WORKSPACES=('dev' 'prod')
+T_WORKSPACES=('default' 'dev' 'prod')
 
 if [[ " ${T_WORKSPACES[*]} " =~ " $2 " ]]; then
   WORKSPACE=$2
@@ -54,8 +79,6 @@ if [[ ${#T_FILES[@]} -le 0 ]]; then
   exit -1
 fi
 
-echo -e "\n"
-
 # Show pwd message
 echo -e "${MSG}Current Directory: ${INFO}`pwd`${EOC}"
 
@@ -76,5 +99,10 @@ if [[ ${#T_VARS[@]} -gt 0 ]]; then
   done
 fi
 
+if [[ $F_GLOBAL_TFVARS -eq 1 ]]; then
+  COMMAND="$COMMAND -var-file=$GLOBAL_TFVARS"
+fi
+
+echo ""
 echo -e "${MSG}Command will execute: ${INFO}$COMMAND${EOC}"
 
