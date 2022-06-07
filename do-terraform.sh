@@ -15,8 +15,8 @@ F_T_VALIDATE=0
 ### VARIABLES
 GLOBAL_TFVARS=""
 ORIGINAL_DIR=`realpath ./`
-LOG_FILE="$ORIGINAL_DIR/do-terraform.log"
-INFRA_LOG_FILE="$ORIGINAL_DIR/do-terraform-infra.log"
+LOG_FILE="$ORIGINAL_DIR/tf.log"
+INFRA_LOG_FILE="$ORIGINAL_DIR/tf-infra.log"
 ORIGINAL_COMMAND="$0 $@"
 
 # Create Log Files, if not exists
