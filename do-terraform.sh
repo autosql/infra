@@ -8,6 +8,14 @@ GREEN='\033[0;32m'
 EOC='\033[0m'
 
 # Check Input Arguments
+if [[ -z $1 || -z $2 ]]; then
+  echo "Use: $0 <PATH DIR> <TERRAFORM COMMAND"
+  echo "Example: $0 live/stage/vpc plan"
+  exit -1
+fi
+
+
+
 
 # TERRAFORM COMMAND
 COMMAND="terraform $2"
