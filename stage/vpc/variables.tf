@@ -9,7 +9,7 @@ variable "region" {
 
 variable "az" {
   type = list(string)
-  default = ["${var.region}a", "${var.region}b"]
+  default = ["ap-northeast-2a", "ap-northeast-2b"]
 }
 
 variable "vpc_cidr" {

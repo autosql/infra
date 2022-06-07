@@ -1,5 +1,6 @@
 locals {
   tags = {
+    app = var.app
     managed = "terraform"
     env = terraform.workspace
   }
@@ -56,7 +57,7 @@ resource "aws_route_table" "public" {
 
   tags = merge(
     local.tags, {
-      Name = "${loacl.prefix}-route-table"
+      Name = "${local.prefix}-route-table"
     }
   )
 }
