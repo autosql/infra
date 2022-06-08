@@ -130,7 +130,7 @@ echo -e "${INFO}The command will be execute: ${RESULT}$COMMAND ${EOC}"
 
 
 # Wait User answer
-if [[ $F_AUTO_APPROVE ]]; then
+if [[ $F_AUTO_APPROVE -eq 1 ]]; then
   yn=y
 else
   read -p "Continue (y or n): " yn
