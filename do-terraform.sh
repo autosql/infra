@@ -120,7 +120,7 @@ if [[ $F_GLOBAL_TFVARS -eq 1 ]]; then
   COMMAND="$COMMAND -var-file=$GLOBAL_TFVARS"
 fi
 
-if [[ $F_AUTO_APPROVE && "$T_COMMAND" == "apply" || "$T_COMMAND" == "destroy" ]]; then
+if [[ $F_AUTO_APPROVE -eq 1 && "$T_COMMAND" == "apply" || "$T_COMMAND" == "destroy" ]]; then
   COMMAND="$COMMAND -auto-approve"
 fi
 
