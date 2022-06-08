@@ -72,7 +72,7 @@ else
 fi
 
 # Check Terraform command
-T_COMMANDS=('plan' 'apply' 'destroy')
+T_COMMANDS=('plan' 'apply' 'destroy' 'console')
 
 if [[ " ${T_COMMANDS[*]} " =~ " $3 " ]]; then
   COMMAND="terraform $3"
