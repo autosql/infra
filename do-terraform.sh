@@ -9,8 +9,7 @@ EOC='\033[0m' # End of Color
 
 ### FLAG
 F_GLOBAL_TFVARS=0
-F_T_LINTING=0
-F_T_VALIDATE=0
+F_AUTO_APPROVE=0
 
 ### VARIABLES
 GLOBAL_TFVARS=""
@@ -28,7 +27,7 @@ if [[ ! -f "$INFRA_LOG_FILE" ]]; then
 fi
 
 # Option settings
-while getopts ":g:" opt;
+while getopts "g:y" opt;
 do
   case $opt in
     g)
@@ -36,6 +35,9 @@ do
       ls $OPTARG 1> /dev/null
       if [[ $? -ne 0 ]]; then exit -1; fi
       GLOBAL_TFVARS=`realpath $OPTARG`
+      ;;
+    y)
+      F_AUTO_APPROVE=1
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -66,7 +68,7 @@ T_WORKSPACES=('default' 'dev' 'prod')
 if [[ " ${T_WORKSPACES[*]} " =~ " $2 " ]]; then
   WORKSPACE=$2
 else
-  echo -e "${ERROR}Workspace $2 is not available${EOC}"
+  echo -e "${ERROR}Workspace $WORKSPACE is not available${EOC}"
   echo -e "${INFO}Available Workspaces are: ${T_WORKSPACES[@]} ${EOC}"
   exit -1
 fi
@@ -76,9 +78,9 @@ T_COMMANDS=('plan' 'apply' 'destroy' 'console')
 
 if [[ " ${T_COMMANDS[*]} " =~ " $3 " ]]; then
   COMMAND="terraform $3"
-  T_COMMAND="$3"
+  T_COMMAND=$3
 else
-  echo -e "${ERROR}Command $3 is not available${EOC}"
+  echo -e "${ERROR}Command $T_COMMAND is not available${EOC}"
   echo -e "${INFO}Available Commands are: ${T_COMMANDS[@]} ${EOC}"
   exit -1
 fi
@@ -118,11 +120,21 @@ if [[ $F_GLOBAL_TFVARS -eq 1 ]]; then
   COMMAND="$COMMAND -var-file=$GLOBAL_TFVARS"
 fi
 
+if [[ $F_AUTO_APPROVE && "$T_COMMAND" == "apply" || "$T_COMMAND" == "destroy" ]]; then
+  COMMAND="$COMMAND -auto-approve"
+fi
+
+# Show Final command
 echo ""
 echo -e "${INFO}The command will be execute: ${RESULT}$COMMAND ${EOC}"
 
+
 # Wait User answer
-read -p "Continue (y or n): " yn
+if [[ $F_AUTO_APPROVE ]]; then
+  yn=y
+else
+  read -p "Continue (y or n): " yn
+fi
 
 case $yn in
   [yY] )
@@ -136,6 +148,7 @@ case $yn in
 
       echo $COMMAND_LOG >> $LOG_FILE
       echo $EXECUTED_LOG >> $LOG_FILE
+      echo "" >> $LOG_FILE
 
       if [[ "$T_COMMAND" == "apply" || "$T_COMMAND" == "destroy" ]]; then
         INFRA_LOG="$UTC [`echo $T_COMMAND | tr [:lower:] [:upper:]`]\$ $COMMAND"
