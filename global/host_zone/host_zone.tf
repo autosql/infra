@@ -7,5 +7,5 @@ data "aws_route53_zone" "this" {
 }
 
 output "current_zone" {
-  value = data.aws_route53_zone.this
+  value = data.aws_route53_zone.this.zone_id
 }
