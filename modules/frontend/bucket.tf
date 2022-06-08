@@ -1,12 +1,3 @@
-locals {
-  tags = {
-    app = var.app
-    managed = "terraform"
-    env = var.env
-  }
-  prefix = "${var.app}-${var.env}"
-}
-
 data "aws_iam_policy_document" "frontend_bucket_policy" {
   statement {
     actions = [
