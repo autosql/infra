@@ -1,3 +1,16 @@
+resource "aws_s3_bucket" "frontend" {
+  bucket = "${var.frontend_bucket}-${var.env}"
+
+  force_destroy = true
+
+  tags = merge(
+    local.tags,
+    {
+      Name = "${local.prefix}-frontend-bucket"
+    }
+  )
+}
+
 data "aws_iam_policy_document" "frontend_bucket_policy" {
   statement {
     actions = [
@@ -8,20 +21,10 @@ data "aws_iam_policy_document" "frontend_bucket_policy" {
       type = "AWS"
     }
     resources = [
-      "arn:aws:s3:::${var.frontend_bucket}-${var.env}/*"
+      "${aws_s3_bucket.frontend.arn}/landing/*",
+      "${aws_s3_bucket.frontend.arn}/erd/*"
     ]
   }
-}
-
-resource "aws_s3_bucket" "frontend" {
-  bucket = "${var.frontend_bucket}-${var.env}"
-
-  tags = merge(
-    local.tags, 
-    {
-      Name = "${local.prefix}-frontend-bucket"
-    }
-  )
 }
 
 resource "aws_s3_bucket_policy" "allow_access_from_public" {
@@ -34,28 +37,3 @@ resource "aws_s3_bucket_acl" "frontend" {
   acl = var.bucket_acl
 }
 
-resource "aws_s3_bucket_versioning" "frontend" {
-  bucket = aws_s3_bucket.frontend.bucket
-
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
-resource "aws_s3_bucket_website_configuration" "landing" {
-  bucket = aws_s3_bucket.frontend.bucket
-
-  index_document {
-    suffix = "index.html"
-  }
-
-  routing_rule {
-    condition {
-      key_prefix_equals = "landing/"
-    }
-
-    redirect {
-      replace_key_prefix_with = "landing/"
-    }
-  }
-}
