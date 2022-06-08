@@ -2,13 +2,9 @@ locals {
   tags = {
     app = var.app
     managed = "terraform"
-    env = terraform.workspace
+    env = var.env
   }
-  prefix = "${var.app}-${terraform.workspace}"
-}
-
-provider "aws" {
-  region = var.region
+  prefix = "${var.app}-${var.env}"
 }
 
 data "aws_iam_policy_document" "frontend_bucket_policy" {
@@ -21,13 +17,13 @@ data "aws_iam_policy_document" "frontend_bucket_policy" {
       type = "AWS"
     }
     resources = [
-      "arn:aws:s3:::${var.frontend_bucket}/*"
+      "arn:aws:s3:::${var.frontend_bucket}-${var.env}/*"
     ]
   }
 }
 
 resource "aws_s3_bucket" "frontend" {
-  bucket = var.frontend_bucket
+  bucket = "${var.frontend_bucket}-${var.env}"
 
   tags = merge(
     local.tags, 
