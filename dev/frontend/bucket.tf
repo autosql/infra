@@ -28,13 +28,6 @@ data "aws_iam_policy_document" "frontend_bucket_policy" {
 
 resource "aws_s3_bucket" "frontend" {
   bucket = var.frontend_bucket
-  acl = var.bucket_acl
-
-  policy = data.aws_iam_policy_document.frontend_bucket_policy.json
-
-  versioning {
-    enabled = true
-  }
 
   tags = merge(
     local.tags, 
@@ -42,6 +35,24 @@ resource "aws_s3_bucket" "frontend" {
       Name = "${local.prefix}-frontend-bucket"
     }
   )
+}
+
+resource "aws_s3_bucket_policy" "allow_access_from_public" {
+  bucket = aws_s3_bucket.frontend.bucket
+  policy = data.aws_iam_policy_document.frontend_bucket_policy.json
+}
+
+resource "aws_s3_bucket_acl" "frontend" {
+  bucket = aws_s3_bucket.frontend.bucket
+  acl = var.bucket_acl
+}
+
+resource "aws_s3_bucket_versioning" "frontend" {
+  bucket = aws_s3_bucket.frontend.bucket
+
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 resource "aws_s3_bucket_website_configuration" "landing" {
