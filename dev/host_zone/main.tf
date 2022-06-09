@@ -1,12 +1,3 @@
-locals {
-  tags = {
-    app = var.app
-    env = terraform.workspace
-    managed = "terraform"
-  }
-  prefix = "${var.app}-${terraform.workspace}"
-}
-
 provider "aws" {
   region = var.region
 }
@@ -17,23 +8,37 @@ module "dns" {
   domain = var.domain
 }
 
-variable "app_records" {
-  type = list(string)
-  default = ["landing", "erd", "api", "db"]
-}
+module "host_zone" {
+  source = "../../modules/host_zone"
 
-resource "aws_route53_record" "index" {
-  zone_id = module.dns.current_zone
-  name = "${terraform.workspace}.${var.domain}"
-  type = "A"
+  app = var.app
 
-  records = ["${data.terraform_remote_state.frontend.outputs.domain_name}/landing/"]
-}
+  region = var.region
+  domain = var.domain
+  route53_zone_id = module.dns.current_zone
 
-resource "aws_route53_record" "erd" {
-  zone_id = module.dns.current_zone
-  name = "${terraform.workspace}.erd.${var.domain}"
-  type = "A"
+  env = terraform.workspace
 
-  records = ["${data.terraform_remote_state.frontend.outputs.domain_name}/erd/"]
+  cloudfront_info = {
+    name = data.terraform_remote_state.frontend.outputs.domain_name
+    zone_id = data.terraform_remote_state.frontend.outputs.hosted_zone_id
+  }
+
+  app_dns_info = {
+    landing = {
+      name = data.terraform_remote_state.frontend.outputs.domain_name
+      path = "landing"
+      tier = "frontend"
+      type = "A"
+    },
+    erd = {
+      name = data.terraform_remote_state.frontend.outputs.domain_name
+      path = "erd"
+      tier = "frontend"
+      type = "A"
+    }
+  }
+
+  remove_record = "landing"
+
 }

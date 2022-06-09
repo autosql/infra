@@ -23,3 +23,8 @@ output "website_endpoint" {
 output "domain_name" {
   value = module.frontend.domain_name 
 }
+
+output "hosted_zone_id" {
+  value = module.frontend.hosted_zone_id
+}
+
