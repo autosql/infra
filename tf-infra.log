@@ -1,0 +1,152 @@
+2022-06-08T12:59:54KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/vpc/ dev apply
+2022-06-08T12:59:54KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-08T13:00:36KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T13:00:36KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T13:01:21KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T13:01:21KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T13:23:17KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T13:23:17KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T13:26:27KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T13:26:27KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T17:09:32KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T17:09:32KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T17:37:11KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T17:37:11KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T17:38:19KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T17:38:19KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T17:45:46KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T17:45:46KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T17:48:00KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T17:48:00KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T17:52:55KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T17:52:55KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T18:16:28KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/host_zone/ dev apply
+2022-06-08T18:16:28KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T18:19:54KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/host_zone/ dev apply
+2022-06-08T18:19:54KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T18:23:41KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T18:23:41KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T18:39:53KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend/ dev apply
+2022-06-08T18:39:53KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-08T18:43:14KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend/ dev destroy
+2022-06-08T18:43:14KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-08T19:25:42KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T19:25:42KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T19:28:50KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T19:28:50KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T19:36:13KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T19:36:13KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T19:38:43KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T19:38:43KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T19:56:22KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T19:56:22KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T19:56:45KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T19:56:45KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T19:58:12KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T19:58:12KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T20:07:43KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T20:07:43KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T20:23:46KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T20:23:46KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T20:25:29KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T20:25:29KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T20:29:55KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-08T20:29:55KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T20:35:40KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend dev apply
+2022-06-08T20:35:40KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-08T20:49:04KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend dev apply
+2022-06-08T20:49:04KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-09T22:29:15KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend dev apply
+2022-06-09T22:29:15KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-09T22:30:52KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend dev apply
+2022-06-09T22:30:52KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-09T23:01:07KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend dev apply
+2022-06-09T23:01:07KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-10T00:10:11KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/host_zone dev apply
+2022-06-10T00:10:11KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-10T01:26:53KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/host_zone dev destroy
+2022-06-10T01:26:53KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T01:31:15KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/host_zone dev destroy
+2022-06-10T01:31:15KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T01:41:36KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/host_zone dev destroy
+2022-06-10T01:41:36KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T01:58:24KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/host_zone dev apply
+2022-06-10T01:58:24KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T02:05:14KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/host_zone/ dev apply
+2022-06-10T02:05:14KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-10T02:06:07KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/host_zone/ dev destroy
+2022-06-10T02:06:07KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T02:19:49KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars global/acm/ default apply
+2022-06-10T02:19:49KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-10T02:25:19KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/host_zone/ dev apply
+2022-06-10T02:25:19KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-10T02:41:28KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/host_zone/ dev destroy
+2022-06-10T02:41:28KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T03:16:00KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/host_zone/ dev destroy
+2022-06-10T03:16:00KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T04:22:21KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-10T04:22:21KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-10T04:43:45KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/cloudfront/ dev apply
+2022-06-10T04:43:45KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-10T04:49:31KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-10T04:49:31KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-10T04:50:17KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-10T04:50:17KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-10T04:51:23KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend/ dev apply
+2022-06-10T04:51:23KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-10T05:39:14KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/cloudfront/ dev apply
+2022-06-10T05:39:14KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T06:28:10KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/cloudfront/ dev destroy
+2022-06-10T06:28:10KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T06:36:27KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/cloudfront/ dev apply
+2022-06-10T06:36:27KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T06:50:38KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/cloudfront/ dev apply
+2022-06-10T06:50:38KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T06:56:50KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/cloudfront/ dev apply
+2022-06-10T06:56:50KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T06:59:52KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend/ dev apply
+2022-06-10T06:59:52KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T07:00:18KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend/ dev destroy
+2022-06-10T07:00:18KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T07:04:24KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend/ dev apply
+2022-06-10T07:04:24KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T07:08:16KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/cloudfront dev destroy
+2022-06-10T07:08:16KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T07:08:32KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend/ dev destroy
+2022-06-10T07:08:32KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T07:47:59KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend dev apply
+2022-06-10T07:47:59KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-10T08:01:15KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend dev apply
+2022-06-10T08:01:15KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-11T03:07:46KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend dev apply
+2022-06-11T03:07:46KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-11T03:09:28KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend dev apply
+2022-06-11T03:09:28KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-11T03:10:06KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend dev apply
+2022-06-11T03:10:06KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-11T03:14:50KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend dev destroy
+2022-06-11T03:14:50KST [DESTROY]$ terraform destroy -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-11T03:16:38KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend dev apply
+2022-06-11T03:16:38KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-11T03:16:49KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend dev apply
+2022-06-11T03:16:49KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-11T03:32:31KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend dev apply
+2022-06-11T03:32:31KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-11T03:40:27KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend dev apply
+2022-06-11T03:40:27KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-11T03:46:51KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend dev apply
+2022-06-11T03:46:51KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-11T04:10:30KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend dev apply
+2022-06-11T04:10:30KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-11T04:32:37KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars -y dev/frontend dev apply
+2022-06-11T04:32:37KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars -auto-approve
+2022-06-11T04:37:18KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/frontend dev apply
+2022-06-11T04:37:18KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-11T05:24:38KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/cloudfront/ dev apply
+2022-06-11T05:24:38KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-11T05:35:15KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/cloudfront/ dev apply
+2022-06-11T05:35:15KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-11T05:43:02KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/cloudfront/ dev apply
+2022-06-11T05:43:02KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
+2022-06-11T06:01:44KST [COMMAND]$ ./do-terraform.sh -g global/g.tfvars dev/cloudfront/ dev apply
+2022-06-11T06:01:44KST [APPLY]$ terraform apply -var-file=/root/infra/global/g.tfvars
