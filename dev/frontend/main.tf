@@ -7,7 +7,8 @@ module "frontend" {
 
   app = var.app
   env = terraform.workspace
+  domain = var.domain
 
-  frontend_bucket = "autosql-frontend-bucket"
+  bucket_names = ["landing", "erd"]
   bucket_acl = "public-read"
 }

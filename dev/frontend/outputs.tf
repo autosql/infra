@@ -1,11 +1,10 @@
 # ----- s3 bucket
-
-output "bucket_domain_name" {
-  value = module.frontend.bucket_domain_name 
-}
-
 output "bucket_regional_domain_name" {
   value = module.frontend.bucket_regional_domain_name 
+}
+
+output "website_endpoints" {
+  value = module.frontend.website_endpoints
 }
 
 ## ----- S3 bucket website configuration
@@ -18,13 +17,3 @@ output "website_endpoint" {
   value = module.frontend.website_endpoint 
 }
 */
-# ----- cloudfront
-
-output "domain_name" {
-  value = module.frontend.domain_name 
-}
-
-output "hosted_zone_id" {
-  value = module.frontend.hosted_zone_id
-}
-

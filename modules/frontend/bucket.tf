@@ -1,17 +1,45 @@
 resource "aws_s3_bucket" "frontend" {
-  bucket = "${var.frontend_bucket}-${var.env}"
+  for_each = toset(var.bucket_names)
+
+  bucket = "${each.value}.${var.env}.${var.domain}" 
 
   force_destroy = true
 
   tags = merge(
     local.tags,
     {
-      Name = "${local.prefix}-frontend-bucket"
+      Name = "${local.prefix}-${each.value}-bucket"
     }
   )
 }
 
-data "aws_iam_policy_document" "frontend_bucket_policy" {
+resource "aws_s3_bucket_website_configuration" "frontend" {
+  for_each = toset(var.bucket_names)
+
+  bucket = aws_s3_bucket.frontend["${each.key}"].bucket
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "error.html"
+  }
+
+  routing_rule {
+    condition {
+      key_prefix_equals = "index.html"
+    }
+    redirect {
+      replace_key_prefix_with = "index.html"
+    }
+  }
+
+}
+
+data "aws_iam_policy_document" "bucket_policy" {
+  for_each = toset(var.bucket_names)
+
   statement {
     actions = [
       "s3:GetObject"
@@ -21,19 +49,21 @@ data "aws_iam_policy_document" "frontend_bucket_policy" {
       type = "AWS"
     }
     resources = [
-      "${aws_s3_bucket.frontend.arn}/landing/*",
-      "${aws_s3_bucket.frontend.arn}/erd/*"
+      "arn:aws:s3:::${aws_s3_bucket.frontend["${each.key}"].bucket}/*"
     ]
   }
 }
 
 resource "aws_s3_bucket_policy" "allow_access_from_public" {
-  bucket = aws_s3_bucket.frontend.bucket
-  policy = data.aws_iam_policy_document.frontend_bucket_policy.json
+  for_each = toset(var.bucket_names)
+
+  bucket = aws_s3_bucket.frontend["${each.key}"].bucket 
+  policy = data.aws_iam_policy_document.bucket_policy["${each.key}"].json
 }
 
 resource "aws_s3_bucket_acl" "frontend" {
-  bucket = aws_s3_bucket.frontend.bucket
+  for_each = toset(var.bucket_names)
+
+  bucket = aws_s3_bucket.frontend["${each.key}"].bucket 
   acl = var.bucket_acl
 }
-

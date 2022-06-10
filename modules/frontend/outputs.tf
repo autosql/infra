@@ -1,11 +1,15 @@
 # ----- s3 bucket
 
-output "bucket_domain_name" {
-  value = aws_s3_bucket.frontend.bucket_domain_name
+output "bucket_regional_domain_name" {
+  value = {
+    for k, bucket in aws_s3_bucket.frontend : k => bucket.bucket_regional_domain_name
+  }
 }
 
-output "bucket_regional_domain_name" {
-  value = aws_s3_bucket.frontend.bucket_regional_domain_name
+output "website_endpoints" {
+  value = {
+    for k, bucket in aws_s3_bucket.frontend : k => bucket.website_endpoint
+  }
 }
 
 ## ----- S3 bucket website configuration
@@ -19,12 +23,3 @@ output "website_endpoint" {
 }
 */
 
-# ----- cloudfront
-
-output "domain_name" {
-  value = aws_cloudfront_distribution.this.domain_name
-}
-
-output "hosted_zone_id" {
-  value = aws_cloudfront_distribution.this.hosted_zone_id
-}

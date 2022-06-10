@@ -6,8 +6,12 @@ variable "env" {
   type = string
 }
 
-variable "frontend_bucket" {
+variable "domain" {
   type = string
+}
+
+variable "bucket_names" {
+  type = list
 }
 
 variable "bucket_acl" {
