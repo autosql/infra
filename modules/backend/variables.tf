@@ -12,6 +12,10 @@ variable "domain" {
   type = string
 }
 
+variable "region" {
+  type = string
+}
+
 # ----- Application Port
 
 variable "host_port" {
@@ -22,9 +26,22 @@ variable "container_port" {
   type = number
 }
 
+variable "container_spec_path" {
+  type = string
+}
+
 # ----- VPC
 
 variable "vpc_id" {
   type = string
 }
 
+variable "public_subnet_ids" {
+  type = list
+}
+
+# ----- cluster
+
+variable "desired_count" {
+  type = number
+}
