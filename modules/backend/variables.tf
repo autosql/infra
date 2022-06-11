@@ -45,3 +45,17 @@ variable "public_subnet_ids" {
 variable "desired_count" {
   type = number
 }
+
+# ----- AutoScaling
+
+variable "min_capacity" {
+  type = number
+}
+
+variable "max_capacity" {
+  type = number
+}
+
+variable "scale_policy" {
+  type = map(number)
+}
