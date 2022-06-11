@@ -25,7 +25,6 @@ resource "aws_s3_bucket_website_configuration" "frontend" {
   error_document {
     key = "index.html"
   }
-
   routing_rule {
     condition {
       key_prefix_equals = "index.html"
@@ -34,7 +33,6 @@ resource "aws_s3_bucket_website_configuration" "frontend" {
       replace_key_prefix_with = "index.html"
     }
   }
-
 }
 
 data "aws_iam_policy_document" "bucket_policy" {
