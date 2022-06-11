@@ -3,6 +3,7 @@ locals {
     app = var.app
     managed = "terraform"
     env = var.env
+    tier = "backend"
   }
   prefix = "${var.app}-${var.env}"
   domain_name = "api.%{if var.env != "prod"}${var.env}.%{endif}${var.domain}"
