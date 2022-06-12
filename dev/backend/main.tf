@@ -23,5 +23,8 @@ module "backend" {
   host_port = 80
   container_port = 3000
   container_spec_path = "backend.config.json.tpl"
+
+  MYSQL_USERNAME = "admin"
+  MYSQL_DATABASE = "autosql"
 }
 

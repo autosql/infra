@@ -61,6 +61,15 @@ resource "aws_iam_role_policy_attachment" "ecs_task" {
 }
 
 ## ----- task definition
+
+data "aws_ssm_parameter" "db_address" {
+  name = "/${var.app}/${var.env}/database/address"
+}
+
+data "aws_ssm_parameter" "db_password" {
+  name = "/${var.app}/${var.env}/database/password"
+}
+
 data "template_file" "this" {
   template = file("${path.cwd}/${var.container_spec_path}")
 
@@ -71,6 +80,8 @@ data "template_file" "this" {
     container_port = var.container_port
     host_port = var.host_port
     app_prefix = local.prefix
+    MYSQL_USERNAME = var.MYSQL_USERNAME
+    MYSQL_DATABASE = var.MYSQL_DATABASE
   }
 }
 

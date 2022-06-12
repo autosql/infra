@@ -16,7 +16,7 @@ variable "region" {
   type = string
 }
 
-# ----- Application Port
+# ----- Application Variables
 
 variable "host_port" {
   type = number
@@ -27,6 +27,14 @@ variable "container_port" {
 }
 
 variable "container_spec_path" {
+  type = string
+}
+
+variable "MYSQL_USERNAME" {
+  type = string
+}
+
+variable "MYSQL_DATABASE" {
   type = string
 }
 

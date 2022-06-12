@@ -15,6 +15,14 @@
       {
         "name": "PORT",
         "value": "${container_port}"
+      },
+      {
+        "name": "MYSQL_USERNAME",
+        "value": "${MYSQL_USERNAME}"
+      },
+      {
+        "name": "MYSQL_DATABASE",
+        "value": "${MYSQL_DATABASE}"
       }
     ]
   }
