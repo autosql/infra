@@ -108,6 +108,10 @@ resource "aws_ecs_service" "this" {
   desired_count = var.desired_count
   launch_type = "FARGATE"
 
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
+
   network_configuration {
     subnets = var.public_subnet_ids
     security_groups = [aws_security_group.ecs.id]
@@ -115,7 +119,7 @@ resource "aws_ecs_service" "this" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.this.arn
+    target_group_arn = aws_lb_target_group.blue.arn
     container_name = local.prefix
     container_port = var.container_port
   }

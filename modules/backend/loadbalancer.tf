@@ -52,7 +52,7 @@ resource "aws_lb_listener" "https_forward" {
 
   default_action {
     type = "forward"
-    target_group_arn = aws_lb_target_group.this.arn
+    target_group_arn = aws_lb_target_group.blue.arn
   }
 }
 
@@ -72,8 +72,19 @@ resource "aws_lb_listener" "http_forward" {
   }
 }
 
-resource "aws_lb_target_group" "this" {
-  name = "${local.prefix}-terget-group"
+resource "aws_lb_listener" "test_forward" {
+  load_balancer_arn = aws_lb.this.arn
+  port = local.web_allow["test"]
+  protocol = "HTTP"
+
+  default_action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.green.arn
+  }
+}
+
+resource "aws_lb_target_group" "blue" {
+  name = "${local.prefix}-terget-group-blue"
   port = local.web_allow["http"]
   protocol = "HTTP"
 
@@ -91,3 +102,21 @@ resource "aws_lb_target_group" "this" {
   }
 }
 
+resource "aws_lb_target_group" "green" {
+  name = "${local.prefix}-terget-group-green"
+  port = local.web_allow["http"]
+  protocol = "HTTP"
+
+  vpc_id = var.vpc_id
+  target_type = "ip"
+
+  health_check {
+    enabled = true
+    interval = 300
+    path = "/"
+    timeout = 60
+    matcher = "200"
+    healthy_threshold = 5
+    unhealthy_threshold = 5
+  }
+}
