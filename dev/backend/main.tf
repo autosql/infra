@@ -12,7 +12,7 @@ module "backend" {
   vpc_id = data.terraform_remote_state.vpc.outputs.vpc_id
   public_subnet_ids = data.terraform_remote_state.vpc.outputs.public_subnet_ids
 
-  desired_count = 3
+  desired_count = 1
   min_capacity = 1
   max_capacity = 3
   scale_policy = {
