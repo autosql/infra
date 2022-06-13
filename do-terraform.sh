@@ -1,17 +1,22 @@
 #!/bin/bash
 
+######################################################################################
 # Program settings
-### COLOR
+######################################################################################
+# Set Color Constant
+# -----------------------------------
 ERROR='\033[1;91m' # Red
 RESULT='\033[0;101m' # Background Red
 INFO='\033[4;36m' # Cyan
 EOC='\033[0m' # End of Color
 
-### FLAG
+# Set Flags
+# -----------------------------------
 F_GLOBAL_TFVARS=0
 F_AUTO_APPROVE=0
 
-### VARIABLES
+# Set Variables
+# -----------------------------------
 GLOBAL_TFVARS=""
 ORIGINAL_DIR=`realpath ./`
 LOG_FILE="$ORIGINAL_DIR/tf.log"
@@ -19,6 +24,7 @@ INFRA_LOG_FILE="$ORIGINAL_DIR/tf-infra.log"
 ORIGINAL_COMMAND="$0 $@"
 
 # Create Log Files, if not exists
+# -----------------------------------
 if [[ ! -f "$LOG_FILE" ]]; then
   touch "$LOG_FILE"
 fi
@@ -26,7 +32,9 @@ if [[ ! -f "$INFRA_LOG_FILE" ]]; then
   touch "$INFRA_LOG_FILE"
 fi
 
+######################################################################################
 # Option settings
+######################################################################################
 while getopts "g:y" opt;
 do
   case $opt in
@@ -46,15 +54,27 @@ done
 
 shift $((OPTIND-1))
 
+
+######################################################################################
+# Exit Conditions
+######################################################################################
 # Check Input Arguments
+# -----------------------------------
 if [[ -z $1 || -z $2 || -z $3 ]]; then
-  echo -e "${ERROR}Use: $0 <PATH DIR> <TERRAFORM WORKSPACE> <TERRAFORM COMMAND>${EOC}"
-  echo -e "${INFO}Example: $0 live/stage/vpc dev plan${EOC}"
+  echo -e "${ERROR}Use: $0 <OPTIONS> <PATH DIR> <TERRAFORM WORKSPACE> <TERRAFORM COMMAND>${EOC}"
+  echo -e "${INFO}Example: $0 -g global/g.tfvars -v live/stage/vpc dev plan${EOC}"
+  echo -e "${INFO}Options: ${EOC}"
+  echo -e "\t\t${INFO}-g <.tfvars PATH>${EOC}"
+  echo -e "\t\t\t${INFO}Specified tfvars files path for global used ${EOC}"
+  echo -e ""
+  echo -e "\t\t${INFO}-v${EOC}"
+  echo -e "\t\t\t${INFO}Auto Approval options${EOC}"
   exit -1
 fi
 
 
 # Check Directory path
+# -----------------------------------
 cd $1
 if [[ $? -ne 0 ]]; then
   exit -1
@@ -63,7 +83,8 @@ DIR=$1
 
 
 # Check Workspace restriction
-T_WORKSPACES=('default' 'dev' 'prod')
+# -----------------------------------
+T_WORKSPACES=('dev' 'prod')
 
 if [[ " ${T_WORKSPACES[*]} " =~ " $2 " ]]; then
   WORKSPACE=$2
@@ -74,7 +95,8 @@ else
 fi
 
 # Check Terraform command
-T_COMMANDS=('plan' 'apply' 'destroy' 'console')
+# -----------------------------------
+T_COMMANDS=('plan' 'apply' 'destroy' 'console' 'output')
 
 if [[ " ${T_COMMANDS[*]} " =~ " $3 " ]]; then
   COMMAND="terraform $3"
@@ -86,17 +108,22 @@ else
 fi
 
 # Check Terraform file exists
+# -----------------------------------
 T_FILES=`find . -type f -name "*.tf"`
 if [[ ${#T_FILES[@]} -le 0 ]]; then
   echo "${ERROR}There is no terraform file${EOC}"
   exit -1
 fi
 
-# Show pwd message
+# Print pwd message
+# -----------------------------------
 echo -e "${INFO}Current Directory: ${RESULT}`pwd`${EOC}"
 
-# Change Terraform Workspace
-# If there is no workspace Then Create it
+######################################################################################
+# Create Command to be execute 
+######################################################################################
+# Create Workspace If doesn't exist 
+# -----------------------------------
 terraform workspace select $WORKSPACE
 if [[ $? -ne 0 ]]; then
   echo -e "${INFO}There is no workspace $WORKSPACE, So Create workspace $WORKSPACE ${EOC}"
@@ -106,7 +133,8 @@ if [[ $? -ne 0 ]]; then
 fi
 echo -e "${INFO}Current Workspace: ${RESULT}`terraform workspace show`${EOC}"
 
-# Make Command with var files
+# Create -var-file Options with files inside working directory
+# -----------------------------------
 T_VARS=`find . -type f -name "*.tfvars"`
 if [[ ${#T_VARS[@]} -gt 0 ]]; then
   for vars in "${T_VARS[@]}"; do
@@ -124,12 +152,19 @@ if [[ $F_AUTO_APPROVE -eq 1 && "$T_COMMAND" == "apply" || "$T_COMMAND" == "destr
   COMMAND="$COMMAND -auto-approve"
 fi
 
+if [[ "$T_COMMAND" == "console" ]]; then
+  COMMAND="$COMMAND -state=./terraform.tfstate.d/$WORKSPACE/terraform.tfstate"
+fi
+
+######################################################################################
 # Show Final command
+######################################################################################
 echo ""
 echo -e "${INFO}The command will be execute: ${RESULT}$COMMAND ${EOC}"
 
-
+######################################################################################
 # Wait User answer
+######################################################################################
 if [[ $F_AUTO_APPROVE -eq 1 ]]; then
   yn=y
 else
@@ -140,7 +175,8 @@ case $yn in
   [yY] )
     eval $COMMAND
 
-    # Logging A script command and executed terraform command
+    # Logging 
+    # -----------------------------------
     if [[ $? -eq 0 ]]; then
       UTC=`TZ='Asia/Seoul' date +%Y-%m-%dT%H:%M:%S%Z`
       COMMAND_LOG="$UTC [COMMAND]\$ $ORIGINAL_COMMAND"
@@ -160,6 +196,8 @@ case $yn in
     fi
     ;;
   [nN] )
+    # Clean Up
+    # -----------------------------------
     if [[ -n $EXISTING_WORKSPACE ]]; then
       echo -e "${INFO}Delete created workspace: $WORKSPACE ${EOC}"
       terraform workspace select $EXISTING_WORKSPACE
