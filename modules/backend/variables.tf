@@ -67,3 +67,12 @@ variable "max_capacity" {
 variable "scale_policy" {
   type = map(number)
 }
+
+# ----- Code Pipeline
+variable "taskdef_path" {
+  type = string
+}
+
+variable "appspec_path" {
+  type = string
+}

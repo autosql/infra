@@ -26,5 +26,8 @@ module "backend" {
 
   MYSQL_USERNAME = "admin"
   MYSQL_DATABASE = "autosql"
+
+  taskdef_path = "taskdef.json"
+  appspec_path = "appspec.yaml"
 }
 
