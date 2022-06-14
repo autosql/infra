@@ -2,7 +2,7 @@ provider "aws" {
   region = var.region
 }
 module "backend" {
-  source = "../../modules/backend"
+  source = "../infra/modules/backend"
 
   app = var.app
   env = terraform.workspace

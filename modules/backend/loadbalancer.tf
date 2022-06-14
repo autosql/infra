@@ -28,8 +28,9 @@ resource "aws_security_group" "lb" {
     }
   )
 }
-
+###################################################################
 # ----- Load Balancer
+###################################################################
 resource "aws_lb" "this" {
   name = "${local.prefix}-loadbalancer"
   subnets = var.public_subnet_ids
@@ -52,7 +53,7 @@ resource "aws_lb_listener" "https_forward" {
 
   default_action {
     type = "forward"
-    target_group_arn = aws_lb_target_group.blue.arn
+    target_group_arn = aws_lb_target_group.green.arn
   }
 }
 
@@ -72,17 +73,58 @@ resource "aws_lb_listener" "http_forward" {
   }
 }
 
+###################################################################
+# ----- Test Listener Rule
+###################################################################
+resource "aws_lb_listener_rule" "blue" {
+  listener_arn = aws_lb_listener.http_forward.arn
+
+  action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.blue.arn
+  }
+
+  condition {
+    host_header {
+      values = ["${local.domain_name}"]
+    }
+  }
+}
+
 resource "aws_lb_listener" "test_forward" {
   load_balancer_arn = aws_lb.this.arn
   port = local.web_allow["test"]
   protocol = "HTTP"
 
   default_action {
-    type = "forward"
-    target_group_arn = aws_lb_target_group.green.arn
+    type = "redirect"
+
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
+resource "aws_lb_listener_rule" "green" {
+  listener_arn = aws_lb_listener.test_forward.arn
+
+  action {
+    type = "forward"
+    target_group_arn = aws_lb_target_group.green.arn
+  }
+
+  condition {
+    host_header {
+      values = ["${local.domain_name}"]
+    }
+  }
+}
+
+###################################################################
+# ----- Target Group
+###################################################################
 resource "aws_lb_target_group" "blue" {
   name = "${local.prefix}-terget-group-blue"
   port = local.web_allow["http"]
@@ -104,7 +146,7 @@ resource "aws_lb_target_group" "blue" {
 
 resource "aws_lb_target_group" "green" {
   name = "${local.prefix}-terget-group-green"
-  port = local.web_allow["http"]
+  port = local.web_allow["test"]
   protocol = "HTTP"
 
   vpc_id = var.vpc_id

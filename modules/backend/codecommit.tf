@@ -1,5 +1,6 @@
-# ----- Data
-
+#####################################################################
+# ----- CODE COMMIT : PUSH AUTOMATION
+#####################################################################
 data "aws_caller_identity" "this" {}
 
 data "template_file" "taskdef" {
@@ -24,9 +25,10 @@ data "template_file" "appspec" {
   vars = {
     app_prefix = local.prefix
     container_port = var.container_port
+    task_definition = aws_ecs_task_definition.this.arn
   }
 }
-/*
+
 resource "aws_codecommit_repository" "this" {
   repository_name = "${local.prefix}-${local.tags["tier"]}-cd-repo"
 
@@ -36,27 +38,7 @@ resource "aws_codecommit_repository" "this" {
     }
   )
 
-  provisioner "local-exec" {
-    command = "echo ${data.template_file.appspec.rendered}"
-  }
-}
-*/
-
-#####################################################################
-# ----- CODE COMMIT : PUSH AUTOMATION
-#####################################################################
-resource "aws_codecommit_repository" "for_test2" {
-  repository_name = "${local.prefix}-${local.tags["tier"]}-for_test2-repo"
-
-  tags = merge(
-    local.tags, {
-      Name = "${local.prefix}-${local.tags["tier"]}-for_test2-repo"
-    }
-  )
-}
-resource "null_resource" "codecommit_cmd" {
   depends_on = [
-    aws_codecommit_repository.for_test2,
     data.template_file.taskdef,
     data.template_file.appspec
   ]
@@ -67,15 +49,15 @@ resource "null_resource" "codecommit_cmd" {
     working_dir = path.cwd
 
     environment = {
-      REPO_NAME = "${aws_codecommit_repository.for_test2.repository_name}"
+      REPO_NAME = "${local.prefix}-${local.tags["tier"]}-cd-repo" 
     }
 
     command = <<-COMMAND
       mkdir -p ./$REPO_NAME &&
+      git clone codecommit::ap-northeast-2://$REPO_NAME &&
       echo '${data.template_file.taskdef.rendered}' > ./$REPO_NAME/taskdef.json &&
       echo '${data.template_file.appspec.rendered}' > ./$REPO_NAME/appspec.yaml &&
       cd ./$REPO_NAME &&
-      git clone codecommit::ap-northeast-2://$REPO_NAME . &&
       git add -A &&
       git commit -m 'initial commit' &&
       git push
