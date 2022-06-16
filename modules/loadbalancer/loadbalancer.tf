@@ -1,4 +1,6 @@
-# ----- Security Group
+###################################################################
+# ----- Load Balancer - Security Group
+###################################################################
 resource "aws_security_group" "lb" {
   vpc_id = var.vpc_id
 
