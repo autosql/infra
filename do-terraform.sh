@@ -31,10 +31,14 @@ PROD_LOG_PATH="$LOG_DIR/$PROD_LOG_FILE"
 
 ORIGINAL_COMMAND="$0 $@"
 
+if [[ ! -d $LOG_DIR ]]; then
+  mkdir -p $LOG_DIR
+fi
+
 ######################################################################################
 # Option settings
 ######################################################################################
-while getopts "g:y:l:" opt;
+while getopts "yg:l:" opt;
 do
   case $opt in
     g)
@@ -65,12 +69,12 @@ shift $((OPTIND-1))
 # -----------------------------------
 if [[ -z $1 || -z $2 || -z $3 ]]; then
   echo -e "${ERROR}Use: $0 <OPTIONS> <PATH DIR> <TERRAFORM WORKSPACE> <TERRAFORM COMMAND>${EOC}"
-  echo -e "${INFO}Example: $0 -g global/g.tfvars -v -l logging-bucket live/stage/vpc dev plan${EOC}"
+  echo -e "${INFO}Example: $0 -g global/g.tfvars -y -l logging-bucket live/stage/vpc dev plan${EOC}"
   echo -e "${INFO}Options: ${EOC}"
   echo -e "\t\t${INFO}-g <.tfvars PATH>${EOC}"
   echo -e "\t\t\t${INFO}Specify the global .tfvars path${EOC}"
   echo -e ""
-  echo -e "\t\t${INFO}-v${EOC}"
+  echo -e "\t\t${INFO}-y${EOC}"
   echo -e "\t\t\t${INFO}Auto Approval option enable${EOC}"
   echo -e ""
   echo -e "\t\t${INFO}-l${EOC}"
