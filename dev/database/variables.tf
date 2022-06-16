@@ -9,7 +9,3 @@ variable "domain" {
 variable "region" {
   type = string
 }
-
-variable "MYSQL_PASSWORD" {
-  type = string
-}
