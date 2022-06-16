@@ -215,11 +215,11 @@ case $yn in
       if [[ "$T_COMMAND" == "apply" || "$T_COMMAND" == "destroy" ]]; then
         COMMAND_LOG="$UTC [`echo $T_COMMAND | tr [:lower:] [:upper:]`]\$ $ORIGINAL_COMMAND"
 
-        if [[ "T_WORKSPACES" == "dev" ]]; then
+        if [[ "$T_WORKSPACES" == "dev" ]]; then
           echo $COMMAND_LOG >> $DEV_LOG_PATH
         fi
 
-        if [[ "T_WORKSPACES" == "prod" ]]; then
+        if [[ "$T_WORKSPACES" == "prod" ]]; then
           echo $COMMAND_LOG >> $PROD_LOG_PATH
         fi
       fi
