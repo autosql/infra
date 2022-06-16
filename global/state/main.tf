@@ -56,3 +56,14 @@ resource "aws_dynamodb_table" "terraform_locks" {
 
   tags = local.tags
 }
+#####################################################
+# ----- DynamoDB Table
+#####################################################
+resource "aws_ssm_parameter" "repository" {
+  name = "/autosql/global/state/bucket"
+  type = "String"
+  value = aws_s3_bucket.terraform_state.bucket 
+
+  tags = local.tags
+}
+
