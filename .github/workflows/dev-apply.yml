@@ -85,8 +85,6 @@ jobs:
   Database:
     needs: VPC
     runs-on: ubuntu-latest
-    env:
-      TF_VAR_MYSQL_PASSWORD: ${{ secrets.TF_VAR_MYSQL_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
@@ -103,6 +101,11 @@ jobs:
         
       - name: Terraform plan
         run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/database/ dev plan
+        env:
+          TF_VAR_MYSQL_PASSWORD: ${{ secrets.TF_VAR_MYSQL_PASSWORD }}
+
       
       - name: Terraform apply
         run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/database/ dev apply
+        env:
+          TF_VAR_MYSQL_PASSWORD: ${{ secrets.TF_VAR_MYSQL_PASSWORD }}
