@@ -8,6 +8,7 @@ on:
   
 env:
   LOG_BUCKET: autosql-infra-terraform-state
+  GLOBAL_VARFILE: global/g.tfvars
   
 jobs:
   VPC:
@@ -27,10 +28,10 @@ jobs:
         run: ./do-terraform.sh dev/vpc dev init
         
       - name: Terraform plan
-        run: ./do-terraform.sh -g global/g.tfvars -y -l $LOG_BUCKET dev/vpc/ dev plan
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/vpc/ dev plan
       
       - name: Terraform apply
-        run: ./do-terraform.sh -g global/g.tfvars -y -l $LOG_BUCKET dev/vpc/ dev apply
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/vpc/ dev apply
         
   Frontend:
     runs-on: ubuntu-latest
@@ -49,10 +50,10 @@ jobs:
         run: ./do-terraform.sh dev/frontend/ dev init
         
       - name: Terraform plan
-        run: ./do-terraform.sh -g global/g.tfvars -y -l $LOG_BUCKET dev/frontend/ dev plan
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/frontend/ dev plan
       
       - name: Terraform apply
-        run: ./do-terraform.sh -g global/g.tfvars -y -l $LOG_BUCKET dev/frontend/ dev apply
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/frontend/ dev apply
   
   Backend:
     needs: VPC
@@ -60,6 +61,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+        run: pip install git-remote-codecommit
       
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -72,10 +78,10 @@ jobs:
         run: ./do-terraform.sh dev/backend/ dev init
         
       - name: Terraform plan
-        run: ./do-terraform.sh -g global/g.tfvars -y -l $LOG_BUCKET dev/backend/ dev plan
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/backend/ dev plan
       
       - name: Terraform apply
-        run: ./do-terraform.sh -g global/g.tfvars -y -l $LOG_BUCKET dev/backend/ dev apply
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/backend/ dev apply
     
   Database:
     needs: VPC
@@ -95,7 +101,7 @@ jobs:
         run: ./do-terraform.sh dev/database/ dev init
         
       - name: Terraform plan
-        run: ./do-terraform.sh -g global/g.tfvars -y -l $LOG_BUCKET dev/database/ dev plan
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/database/ dev plan
       
       - name: Terraform apply
-        run: ./do-terraform.sh -g global/g.tfvars -y -l $LOG_BUCKET dev/database/ dev apply
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/database/ dev apply
