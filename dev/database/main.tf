@@ -29,4 +29,5 @@ module "database" {
   database_port = 3306
 
   MYSQL_USER = "admin"
+  MYSQL_PASSWORD = var.MYSQL_PASSWORD
 }
