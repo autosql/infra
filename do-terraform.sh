@@ -14,28 +14,27 @@ EOC='\033[0m' # End of Color
 # -----------------------------------
 F_GLOBAL_TFVARS=0
 F_AUTO_APPROVE=0
-
+F_REMOTE_LOGGING=0
 # Set Variables
 # -----------------------------------
 GLOBAL_TFVARS=""
 ORIGINAL_DIR=`realpath ./`
-LOG_FILE="$ORIGINAL_DIR/tf.log"
-INFRA_LOG_FILE="$ORIGINAL_DIR/tf-infra.log"
-ORIGINAL_COMMAND="$0 $@"
+LOG_DIR="$ORIGINAL_DIR/logs"
+LOG_BUCKET=""
 
-# Create Log Files, if not exists
-# -----------------------------------
-if [[ ! -f "$LOG_FILE" ]]; then
-  touch "$LOG_FILE"
-fi
-if [[ ! -f "$INFRA_LOG_FILE" ]]; then
-  touch "$INFRA_LOG_FILE"
-fi
+LOG_FILE="tf.log"
+LOG_PATH="$LOG_DIR/$LOG_FILE"
+DEV_LOG_FILE="dev-infra.log"
+DEV_LOG_PATH="$LOG_DIR/$DEV_LOG_FILE"
+PROD_LOG_FILE="prod-infra.log"
+PROD_LOG_PATH="$LOG_DIR/$PROD_LOG_FILE"
+
+ORIGINAL_COMMAND="$0 $@"
 
 ######################################################################################
 # Option settings
 ######################################################################################
-while getopts "g:y" opt;
+while getopts "g:y:l:" opt;
 do
   case $opt in
     g)
@@ -46,6 +45,10 @@ do
       ;;
     y)
       F_AUTO_APPROVE=1
+      ;;
+    l)
+      F_REMOTE_LOGGING=1
+      LOG_BUCKET=$OPTARG
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -62,13 +65,18 @@ shift $((OPTIND-1))
 # -----------------------------------
 if [[ -z $1 || -z $2 || -z $3 ]]; then
   echo -e "${ERROR}Use: $0 <OPTIONS> <PATH DIR> <TERRAFORM WORKSPACE> <TERRAFORM COMMAND>${EOC}"
-  echo -e "${INFO}Example: $0 -g global/g.tfvars -v live/stage/vpc dev plan${EOC}"
+  echo -e "${INFO}Example: $0 -g global/g.tfvars -v -l logging-bucket live/stage/vpc dev plan${EOC}"
   echo -e "${INFO}Options: ${EOC}"
   echo -e "\t\t${INFO}-g <.tfvars PATH>${EOC}"
-  echo -e "\t\t\t${INFO}Specified tfvars files path for global used ${EOC}"
+  echo -e "\t\t\t${INFO}Specify the global .tfvars path${EOC}"
   echo -e ""
   echo -e "\t\t${INFO}-v${EOC}"
-  echo -e "\t\t\t${INFO}Auto Approval options${EOC}"
+  echo -e "\t\t\t${INFO}Auto Approval option enable${EOC}"
+  echo -e ""
+  echo -e "\t\t${INFO}-l${EOC}"
+  echo -e "\t\t\t${INFO}S3 Bucket name for saving logs${EOC}"
+  echo -e "\t\t\t${INFO}This Option needs aws credential by \'aws configure\'${EOC}"
+  echo -e "\t\t\t${INFO}And Account need to be allowed GetObject, PutObject action to this bucket resource${EOC}"
   exit -1
 fi
 
@@ -79,8 +87,7 @@ cd $1
 if [[ $? -ne 0 ]]; then
   exit -1
 fi
-DIR=$1
-
+WORKING_DIR=$1
 
 # Check Workspace restriction
 # -----------------------------------
@@ -175,29 +182,45 @@ case $yn in
   [yY] )
     eval $COMMAND
 
-    # Logging 
-    # -----------------------------------
+    ##################################################################################
+    # Logging
+    ##################################################################################
     if [[ $? -eq 0 ]]; then
+
+      # Get log files from S3 Bucket
+      if [[ $F_REMOTE_LOGGING -eq 1 ]]; then
+        aws s3 cp s3://$LOG_BUCKET/logs  $LOG_DIR --recursive
+      fi
+
+      # Logging All Command
       UTC=`TZ='Asia/Seoul' date +%Y-%m-%dT%H:%M:%S%Z`
       COMMAND_LOG="$UTC [COMMAND]\$ $ORIGINAL_COMMAND"
-      EXECUTED_LOG="$UTC [EXECUTED]\$ $COMMAND"
+      echo $COMMAND_LOG >> $LOG_PATH
 
-      echo $COMMAND_LOG >> $LOG_FILE
-      echo $EXECUTED_LOG >> $LOG_FILE
-      echo "" >> $LOG_FILE
-
+      # Logging Apply and Destroy Command by environment
       if [[ "$T_COMMAND" == "apply" || "$T_COMMAND" == "destroy" ]]; then
-        INFRA_LOG="$UTC [`echo $T_COMMAND | tr [:lower:] [:upper:]`]\$ $COMMAND"
+        COMMAND_LOG="$UTC [`echo $T_COMMAND | tr [:lower:] [:upper:]`]\$ $ORIGINAL_COMMAND"
 
-        echo $COMMAND_LOG >> $INFRA_LOG_FILE
-        echo $INFRA_LOG >> $INFRA_LOG_FILE
+        if [[ "T_WORKSPACES" == "dev" ]]; then
+          echo $COMMAND_LOG >> $DEV_LOG_PATH
+        fi
+
+        if [[ "T_WORKSPACES" == "prod" ]]; then
+          echo $COMMAND_LOG >> $PROD_LOG_PATH
+        fi
+      fi
+
+      # Sync log files to S3 Bucket
+      if [[ $F_REMOTE_LOGGING -eq 1 ]]; then
+        aws s3 sync $LOG_DIR s3://$LOG_BUCKET/logs
       fi
 
     fi
     ;;
   [nN] )
+    ##################################################################################
     # Clean Up
-    # -----------------------------------
+    ##################################################################################
     if [[ -n $EXISTING_WORKSPACE ]]; then
       echo -e "${INFO}Delete created workspace: $WORKSPACE ${EOC}"
       terraform workspace select $EXISTING_WORKSPACE
