@@ -13,6 +13,7 @@ locals {
   web_allow = {
     http = 80
     https = 443
+    ssh = 22
   }
 
   all_ips = ["0.0.0.0/0"]

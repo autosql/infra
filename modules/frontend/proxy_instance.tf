@@ -51,16 +51,20 @@ resource "aws_instance" "proxy" {
   subnet_id = var.public_subnet_ids[0]
   security_groups = [aws_security_group.proxy.id]
 
+  key_name = "autosql-dev"
+
   tags = merge(
     local.tags, {
       Name = "${local.prefix}-reverse-proxy"
     }
   )
 
-  user_data = <<EOF
-  sudo apt update
-  sudo apt install -y nginx
-  sudo echo "server{listen 80; server_name _; location / {proxy_pass ${aws_s3_bucket.frontend["landing"].website_endpoint};} location /erd {proxy_pass ${aws_s3_bucket.frontend["erd"].website_endpoint};} }" > /etc/nginx/sites-enabled/default
-  sudo systemctl restart nginx
+  user_data = <<-EOF
+  #!/bin/bash -ex
+  sudo -i
+  apt update -y
+  apt install -y nginx
+  echo "server {listen 80; server_name _; location / {proxy_pass http://${aws_s3_bucket.frontend["landing"].website_endpoint};} location /erd {proxy_pass http://${aws_s3_bucket.frontend["erd"].website_endpoint};} }" > /etc/nginx/sites-enabled/default
+  systemctl restart nginx
   EOF
 }
