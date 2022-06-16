@@ -65,7 +65,7 @@ jobs:
         with:
           python-version: '3.9'
           cache: 'pip'
-        run: pip install git-remote-codecommit
+      - run: pip install git-remote-codecommit
       
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
