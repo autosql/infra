@@ -130,6 +130,16 @@ fi
 # -----------------------------------
 echo -e "${INFO}Current Directory: ${RESULT}`pwd`${EOC}"
 
+
+######################################################################################
+# If Command is init
+######################################################################################
+if [[ "$T_COMMAND" == "init" ]]; then
+  COMMAND="terraform $T_COMMAND"
+  eval $COMMAND
+  exit 0
+fi
+
 ######################################################################################
 # Create Command to be execute 
 ######################################################################################
@@ -166,11 +176,6 @@ fi
 #if [[ "$T_COMMAND" == "console" ]]; then
 #  COMMAND="$COMMAND -state=./terraform.tfstate.d/$WORKSPACE/terraform.tfstate"
 #fi
-
-if [[ "$T_COMMAND" == "init" ]]; then
-  COMMAND="terraform $T_COMMAND"
-fi
-
 
 ######################################################################################
 # Show Final command
