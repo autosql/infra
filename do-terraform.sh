@@ -103,7 +103,7 @@ fi
 
 # Check Terraform command
 # -----------------------------------
-T_COMMANDS=('plan' 'apply' 'destroy' 'console' 'output')
+T_COMMANDS=('plan' 'apply' 'destroy' 'output' 'init')
 
 if [[ " ${T_COMMANDS[*]} " =~ " $3 " ]]; then
   COMMAND="terraform $3"
@@ -159,9 +159,14 @@ if [[ $F_AUTO_APPROVE -eq 1 && "$T_COMMAND" == "apply" || "$T_COMMAND" == "destr
   COMMAND="$COMMAND -auto-approve"
 fi
 
-if [[ "$T_COMMAND" == "console" ]]; then
-  COMMAND="$COMMAND -state=./terraform.tfstate.d/$WORKSPACE/terraform.tfstate"
+#if [[ "$T_COMMAND" == "console" ]]; then
+#  COMMAND="$COMMAND -state=./terraform.tfstate.d/$WORKSPACE/terraform.tfstate"
+#fi
+
+if [[ "$T_COMMAND" == "init" ]]; then
+  COMMAND="terraform $T_COMMAND"
 fi
+
 
 ######################################################################################
 # Show Final command
