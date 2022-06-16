@@ -10,6 +10,12 @@ variable "domain" {
   type = string
 }
 
+variable "region" {
+  type = string
+}
+
+# ----- Bucket
+
 variable "bucket_names" {
   type = list
 }
@@ -19,3 +25,13 @@ variable "bucket_acl" {
   default = "private"
 }
 
+
+# ----- VPC
+
+variable "vpc_id" {
+  type = string
+}
+
+variable "public_subnet_ids" {
+  type = list
+}
