@@ -58,6 +58,8 @@ resource "aws_codecommit_repository" "this" {
       echo '${data.template_file.taskdef.rendered}' > ./$REPO_NAME/taskdef.json &&
       echo '${data.template_file.appspec.rendered}' > ./$REPO_NAME/appspec.yaml &&
       cd ./$REPO_NAME &&
+      git config user.name 'backend'
+      git config user.email 'backend@autosql.co.kr'
       git add -A &&
       git commit -m 'initial commit' &&
       git push
