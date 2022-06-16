@@ -1,8 +1,10 @@
 data "terraform_remote_state" "vpc" {
 
-  backend = "local"
+  backend = "s3"
 
   config = {
-    path = "../vpc/terraform.tfstate.d/${terraform.workspace}/terraform.tfstate"
+    bucket = "autosql-infra-terraform-state"
+    key = "env:/${terraform.workspace}/vpc/terraform.tfstate"
+    region = "ap-northeast-2"
   }
 }
