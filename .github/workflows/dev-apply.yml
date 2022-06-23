@@ -1,0 +1,108 @@
+name: Dev Infra
+
+on:
+  push:
+    branches: [ "dev-apply" ]
+    
+  workflow_dispatch:
+  
+env:
+  LOG_BUCKET: autosql-infra-terraform-state
+  GLOBAL_VARFILE: global/g.tfvars
+  
+jobs:
+  VPC:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      
+      - name: Terraform init
+        run: ./do-terraform.sh dev/vpc dev init
+        
+      - name: Terraform plan
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/vpc/ dev plan
+      
+      - name: Terraform apply
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/vpc/ dev apply
+        
+  Frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      
+      - name: Terraform init
+        run: ./do-terraform.sh dev/frontend/ dev init
+        
+      - name: Terraform plan
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/frontend/ dev plan
+      
+      - name: Terraform apply
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/frontend/ dev apply
+  
+  Backend:
+    needs: VPC
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - run: pip install git-remote-codecommit
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      
+      - name: Terraform init
+        run: ./do-terraform.sh dev/backend/ dev init
+        
+      - name: Terraform plan
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/backend/ dev plan
+      
+      - name: Terraform apply
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/backend/ dev apply
+    
+  Database:
+    needs: VPC
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_MYSQL_PASSWORD: ${{ secrets.TF_VAR_MYSQL_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      
+      - name: Terraform init
+        run: ./do-terraform.sh dev/database/ dev init
+        
+      - name: Terraform plan
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/database/ dev plan
+      
+      - name: Terraform apply
+        run: ./do-terraform.sh -g $GLOBAL_VARFILE -y -l $LOG_BUCKET dev/database/ dev apply
