@@ -1,7 +1,7 @@
 
 ## Autosql 인프라 구조
 
-![infra-Infra drawio](https://user-images.githubusercontent.com/96629089/174983580-66bc6cb5-c70a-4f79-8086-d7195b02c8d3.png)
+![infra-Infra drawio](https://user-images.githubusercontent.com/96629089/175305838-6918904a-684a-42fb-8ba9-65977bb293c1.png)
 
 ### 이슈
 - 현재 개발 환경의 Cloudfront 를 내리고 각 Bucket 으로 proxy 를 위한 nginx 서버를 둠
@@ -10,4 +10,4 @@
 
 ## Autosql 인프라 네트워크 및 보안 구조
 
-![infra-Network drawio](https://user-images.githubusercontent.com/96629089/174983627-883cfb63-bf84-4a4d-ae44-c0d46973b519.png)
+![infra-Network drawio](https://user-images.githubusercontent.com/96629089/175305863-6e28b082-b9b2-40c0-82b0-060414faf8e6.png)
